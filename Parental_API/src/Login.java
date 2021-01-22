@@ -24,7 +24,7 @@ public class Login {
 		.then().log().all().assertThat().statusCode(200)
 		.extract().response().asString();
 		//System.out.println(response);
-		
+		System.out.println("\n=========== First API Run Sucessfully============");
 	    js =new JsonPath(response);      
 		message = js.get("message");
 		System.out.println(message);
@@ -36,26 +36,35 @@ public class Login {
 		//Authenticate otp
 		
 		 response = given().log().all()
-				.header("Content-Type","application/json")
-				.body("{\"mobileNumber\":7588414426,\"oneTimePassword\":"+otp+"}")
-				.when().post("/authenticate")
-				.then().log().all().assertThat().statusCode(200)
-				.extract().response().asString();
+					.header("Content-Type","application/json")
+					.body("{\"mobileNumber\":7588414426,\"oneTimePassword\":"+otp+"}")
+					.when().post("/authenticate")
+					.then().log().all().assertThat().statusCode(200)
+					.extract().response().asString();
 		
-	 js =new JsonPath(response);      
-	 message = js.get("message");
-		System.out.println(message);
-		String token = js.get("token");
-		System.out.println(token);
-		response= given().log().all()
-				.header("Content-Type","application/json")
-				.body("{\"token\":"+token+"}")
-				.when().post("/banner")
-				.then().log().all().assertThat().statusCode(200)
-				.extract().response().asString();
-				System.out.println(response);
-		
-		
+		 js =new JsonPath(response);
+			String token =js.get("data.token");
+			System.out.println(token);
+		 
+			 System.out.println("\n=========== Second API Run Sucessfully============");	
+			 
+				
+			 response = given().log().all()
+						.header("Content-Type","application/json")
+						.body("{\"mobileNumber\":0011223344,\"token\":"+token+",\"bot_id\":\"000A7B\"}")
+						.when().post("/getAppConfiguration")
+						.then().log().all().assertThat().statusCode(200)
+						.extract().response().asString();
+			 System.out.println("\n=========== Third API Run Sucessfully============");	
+			 
+			 response = given().log().all()
+						.header("Content-Type","application/json")
+						.body("{\"mobileNumber\":0011223344,\"token\":"+token+",\"bot_id\":\"000A7B\"}")
+						.when().post("/botAssociation")
+						.then().log().all().assertThat().statusCode(200)
+						.extract().response().asString();
+			 System.out.println("\n=========== Fourth API Run Sucessfully============");	
+			 
 
 	}
 
